@@ -40,7 +40,7 @@ def on_message_received(message):
             for key in json_data.keys():
                 msg += "<u>" + key + "</u> \n"
                 for key2 in ["Пресс", "Брусья", "Отжимания", "Подтягивания"]:
-                    msg += "" + key2 + ": " + str(workout_data.get_today_for_key(key2)) + " раз\n"
+                    msg += "" + key2 + ": " + str(workout_data.get_date_for_key(key, key2)) + " раз\n"
                 msg += "\n"
             bot.send_message(chat_id, msg, parse_mode='html')
         elif msg_text == config.BUTTON_CANCEL:

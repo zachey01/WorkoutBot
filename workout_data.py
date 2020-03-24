@@ -31,6 +31,16 @@ def get_today_for_key(key):
     return my_sum
 
 
+def get_date_for_key(date, key):
+    my_sum = 0
+    json_data = get_workout_data_json()
+    day_data = json_data[date]
+    array = day_data[key]
+    for value in array:
+        my_sum += value
+    return my_sum
+
+
 def update_json_data(key, value):
     init_new_day_if_needed()
     json_data = get_workout_data_json()
