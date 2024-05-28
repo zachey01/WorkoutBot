@@ -1,50 +1,41 @@
-# -*- coding: utf-8 -*-
 import telebot
 import config
 import workout_data
 
 from telebot import types
 
-# Инициализация бота
 bot = telebot.TeleBot(config.TOKEN)
 
 
-# При первом запуске бота
 @bot.message_handler(commands=['start'])
 def send_welcome_message(message):
-    # Отправка сообщения "Ну привет, <Имя пользователя>))"
-    bot.send_message(message.chat.id,  # В какой чат отправить сообщение
-                     # Какое сообщение
-                     "Добро пожаловать!",
-                     # Как форматировать строку
+    bot.send_message(message.chat.id, 
+                     config.START_MESSAGE,
                      parse_mode='html',
-                     # Подключаем клавиатуру
-                     reply_markup=default_keyboard())
-    # Инициализация стикера
+                     reply_markup=default_keyboard(message.chat.id))
 
 
-# При получении сообщения
 @bot.message_handler(content_types=['text'])
 def on_message_received(message):
+    chat_id = message.chat.id
     if message.chat.type == 'private':
-        chat_id = message.chat.id
         msg_text = message.text  # .encode('utf-8')
         if msg_text == config.BUTTON_ADDITIONALLY_1:
             msg = "<b><u>За все время:</u></b> \n\n"
             for key in ["Пресс", "Брусья", "Отжимания", "Подтягивания"]:
-                msg = msg + "" + key + ": " + str(workout_data.get_sum_for_key(key)) + " раз\n"
+                msg = msg + "" + key + ": " + str(workout_data.get_sum_for_key(chat_id, key)) + " раз\n"
             bot.send_message(chat_id, msg, parse_mode='html')
         elif msg_text == config.BUTTON_ADDITIONALLY_2:
-            json_data = workout_data.get_workout_data_json()
+            json_data = workout_data.get_workout_data_json(chat_id)
             msg = "<b><u>Подробная статистика:</u></b> \n\n"
             for key in json_data.keys():
                 msg += "<u>" + key + "</u> \n"
                 for key2 in ["Пресс", "Брусья", "Отжимания", "Подтягивания"]:
-                    msg += "" + key2 + ": " + str(workout_data.get_date_for_key(key, key2)) + " раз\n"
+                    msg += "" + key2 + ": " + str(workout_data.get_date_for_key(chat_id, key, key2)) + " раз\n"
                 msg += "\n"
             bot.send_message(chat_id, msg, parse_mode='html')
         elif msg_text == config.BUTTON_CANCEL:
-            bot.send_message(chat_id, msg_text, reply_markup=default_keyboard())
+            bot.send_message(chat_id, msg_text, reply_markup=default_keyboard(chat_id))
         elif msg_text == config.BUTTON_SELECTOR_1 or msg_text == config.BUTTON_SELECTOR_2 or msg_text == config.BUTTON_SELECTOR_3 or msg_text == config.BUTTON_SELECTOR_4:
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             for i in range(1, 6):
@@ -55,21 +46,18 @@ def on_message_received(message):
         elif msg_text[:2].isdigit():
             key = msg_text[3:]
             value = int(msg_text[:2])
-            workout_data.update_json_data(key, value)
+            workout_data.update_json_data(chat_id, key, value)
             msg = "<b><u>Сегодня:</u></b> \n\n"
             for key in ["Пресс", "Брусья", "Отжимания", "Подтягивания"]:
-                msg = msg + "" + key + ": " + str(workout_data.get_today_for_key(key)) + " раз\n"
-            bot.send_message(chat_id, msg, reply_markup=default_keyboard(), parse_mode='html')
+                msg = msg + "" + key + ": " + str(workout_data.get_today_for_key(chat_id, key)) + " раз\n"
+            bot.send_message(chat_id, msg, reply_markup=default_keyboard(chat_id), parse_mode='html')
         else:
-            bot.send_message(chat_id, "Я тебя не понимаю", reply_markup=default_keyboard())
+            bot.send_message(chat_id, "Я тебя не понимаю", reply_markup=default_keyboard(chat_id))
 
 
-# Возвращает первую клавиатуру
-def default_keyboard():
-    # Инициализация markup
+def default_keyboard(chat_id):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
 
-    # Инициализация кнопки
     btn1 = types.KeyboardButton(config.BUTTON_SELECTOR_1)
     btn2 = types.KeyboardButton(config.BUTTON_SELECTOR_2)
     btn3 = types.KeyboardButton(config.BUTTON_SELECTOR_3)
@@ -77,16 +65,13 @@ def default_keyboard():
     btn5 = types.KeyboardButton(config.BUTTON_ADDITIONALLY_1)
     btn6 = types.KeyboardButton(config.BUTTON_ADDITIONALLY_2)
 
-    # Добавление кнопки в markup
     markup.add(btn1, btn2)
     markup.add(btn3, btn4)
     markup.add(btn5)
     markup.add(btn6)
 
-    # Возвращаем markup
     return markup
 
 
-# Запуск бота
 print("Бот успешно запущен!")
 bot.polling(none_stop=True)

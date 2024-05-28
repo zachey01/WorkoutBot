@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 
-TOKEN = "997535861:AAH56vTF9nBDCMxrZXDcgnKKfkZ7UqHWj7M"
-
+TOKEN = "7048876546:AAFgsNtCwK83szoudMa2rYz9bp43110YThQ"
 BUTTON_SELECTOR_1 = "Пресс"
 BUTTON_SELECTOR_2 = "Брусья"
 BUTTON_SELECTOR_3 = "Отжимания"
@@ -12,7 +10,7 @@ BUTTON_ADDITIONALLY_2 = "Подробная статистика"
 
 BUTTON_CANCEL = "Отмена"
 
-JSON_PATH = "workout.json"
+JSON_PATH = "./data/workout-"
 
 INIT_JSON_OBJECT = {
     "Пресс": [],
@@ -20,3 +18,5 @@ INIT_JSON_OBJECT = {
     "Брусья": [],
     "Подтягивания": []
 }
+
+START_MESSAGE = "Добро пожаловать!"
