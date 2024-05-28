@@ -1,5 +1,5 @@
 
-TOKEN = "7048876546:AAFgsNtCwK83szoudMa2rYz9bp43110YThQ"
+TOKEN = "Telegram token"
 BUTTON_SELECTOR_1 = "Пресс"
 BUTTON_SELECTOR_2 = "Брусья"
 BUTTON_SELECTOR_3 = "Отжимания"
