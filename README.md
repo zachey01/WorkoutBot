@@ -5,7 +5,7 @@ This bot is designed to keep track of user's workouts. It allows you to keep sta
 ## Installation
 
 1. `git clone https://github.com/zachey01/WorkoutBot.git`
-2. Paste Telegram token in `config.py`
+2. Rename `config.py.example` to `config.py` and paste Telegram token
 3. `pip install -r requirements.txt`
 4. `py main.py`
 5. Enjoy ^^
